@@ -1,0 +1,13 @@
+# build output
+build/
+dist/
+
+# personal measurements and drafts - never publish
+private/
+*.etl
+*.etl.NGENPDB/
+*.csv
+hot_ranges.json
+gamecache.log
+
+__pycache__/

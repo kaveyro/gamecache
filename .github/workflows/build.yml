@@ -1,0 +1,61 @@
+name: build
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+    permissions:
+      contents: write       # create the release on tags
+      id-token: write       # build provenance attestation
+      attestations: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Build xinput1_4 proxy
+        shell: cmd
+        run: build.cmd xinput1_4
+
+      - name: Self-test
+        shell: pwsh
+        run: python -I tools/test_hook.py build/xinput1_4.dll "$env:RUNNER_TEMP/gctest"
+
+      - name: Package
+        shell: pwsh
+        run: >
+          ./package.ps1 -GameProfile control-resonant -Game 'Control Resonant'
+          -Exe CONTROLResonant.exe -RepoUrl "https://github.com/${{ github.repository }}"
+
+      - name: Attest build provenance
+        if: github.event_name != 'pull_request'
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: |
+            build/xinput1_4.dll
+            dist/*.zip
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: gamecache
+          path: |
+            dist/*.zip
+            dist/*.sha256
+
+      - name: Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/*.zip
+            dist/*.sha256

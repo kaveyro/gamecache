@@ -1,0 +1,31 @@
+gamecache {VERSION} for {GAME}
+============================================================
+
+What it does
+  The game reads its data files unbuffered, bypassing the Windows file cache, and
+  reads the same data over and over. On slower SSDs and HDDs that causes stutter.
+  gamecache lets Windows keep that data in RAM, similar to what PrimoCache does,
+  but without a driver and without reserving memory.
+
+Install
+  1. Copy {PROXY}.dll and gamecache.ini into the game folder
+     (the folder that contains {EXE}).
+  2. Start the game as usual.
+  3. Check that it works: the game folder now contains gamecache.log with lines like
+       gamecache {VERSION} loaded into ...\{EXE}
+       buffered open: ...
+  The log only grows while the game opens files, usually in the first seconds.
+  After that it stays quiet - the change still applies to every read.
+  If you use PrimoCache or a similar cache for this drive, pause it to compare.
+
+Uninstall
+  Delete {PROXY}.dll, gamecache.ini and gamecache.log from the game folder.
+
+Notes
+  - Single-player games without anti-cheat only.
+  - Only files that are opened read-only are touched; save games are not affected.
+  - Works best with 16 GB RAM or more. The first time an area loads still comes from
+    the drive; repeated loads come from RAM.
+  - Set log=0 in gamecache.ini to stop writing the log, enabled=0 to switch it off.
+
+Source code, build provenance and issues: {REPO_URL}
