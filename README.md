@@ -170,6 +170,12 @@ when programs need it. Nothing is reserved.
 **Why not fix it in the game?**
 That would be the real fix. If you're affected, report it to the developer with the numbers above.
 
+## Built with AI
+
+This project was written with Claude Code (Claude Opus 5.5) and tested in-game by the repository
+owner. [docs/AI-DEVELOPMENT.md](docs/AI-DEVELOPMENT.md) describes the setup, the process and the
+prompts. [AGENTS.md](AGENTS.md) contains instructions for agents working on the code.
+
 ## License
 
 MIT, see [LICENSE](LICENSE).
